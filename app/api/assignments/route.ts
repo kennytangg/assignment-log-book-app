@@ -61,12 +61,12 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, subject, description, dueDate, status } = body;
+    const { title, description, dueDate, status } = body;
 
     // basic validation
-    if (!title || !subject || !description || !dueDate) {
+    if (!title || !description || !dueDate) {
       return NextResponse.json(
-        { success: false, message: "title, subject, description, and dueDate are required" },
+        { success: false, message: "title, description, and dueDate are required" },
         { status: 400 }
       );
     }
@@ -74,10 +74,9 @@ export async function POST(req: Request) {
     const newAssignment = {
       id: crypto.randomUUID(),
       title,
-      subject,
       description,
       dueDate,
-      status: status ?? "pending",
+      status: status ?? "Create",
       createdAt: new Date().toISOString(),
     };
 

@@ -7,12 +7,11 @@
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | Yes | Generated with `crypto.randomUUID()` on create |
-| `title` | `string` | Yes | |
-| `subject` | `string` | Yes | |
-| `description` | `string` | Yes | |
-| `dueDate` | `string` | Yes | Date string |
-| `status` | `"pending" \| "completed" \| "overdue"` | Yes | Default to `"pending"` |
-| `createdAt` | `string` | Yes | ISO timestamp on create |
+| `title` | `string` | Yes | Assignment title |
+| `description` | `string` | Yes | Assignment description |
+| `dueDate` | `string` | Yes | Due date (use calendar function) |
+| `status` | `"Create" \| "On Process" \| "Submitted"` | Yes | Default to `"Create"` |
+| `createdAt` | `string` | Yes | Assignment date - auto-generated ISO timestamp |
 
 ## API Design Table
 
@@ -22,9 +21,9 @@
 | **Evidence:** | | | | | ![](public/api_get_all.png) | | |
 | `/api/assignment` | `GET` | Wrong endpoint URL | Error | URL not found | Status: 404 | Next.js handles invalid routes | Passed |
 | **Evidence:** | | | | | ![](public/api_get_all_error.png) | | |
-| `/api/assignments` | `POST` | Create new assignment | Success | `title`, `subject`, `description`, `dueDate` provided | Status: 201, `{ success: true, data: Assignment }` with generated `id` and `createdAt` | Generates UUID for `id`, ISO timestamp for `createdAt`, defaults `status` to `"pending"` | Passed |
+| `/api/assignments` | `POST` | Create new assignment | Success | `title`, `description`, `dueDate` provided | Status: 201, `{ success: true, data: Assignment }` with generated `id` and `createdAt` | Generates UUID for `id`, ISO timestamp for `createdAt`, defaults `status` to `"Create"` | Passed |
 | **Evidence:** | | | | | ![](public/api_post.png) | | |
-| `/api/assignments` | `POST` | Create new assignment | Error | Missing required field (e.g., `title`) | Status: 400, `{ success: false, message: "title, subject, description, and dueDate are required" }` | Validates all four required fields | Passed |
+| `/api/assignments` | `POST` | Create new assignment | Error | Missing required field (e.g., `title`) | Status: 400, `{ success: false, message: "title, description, and dueDate are required" }` | Validates all three required fields | Passed |
 | **Evidence:** | | | | | ![](public/api_post_error.png) | | |
 | `/api/assignments/{id}` | `GET` | Fetch assignment by ID | Success | Valid `id` exists | Status: 200, `{ success: true, data: Assignment }` | Exact match lookup on `Assignment.id` | Passed |
 | **Evidence:** | | | | | ![](public/api_get_id.png) | | |

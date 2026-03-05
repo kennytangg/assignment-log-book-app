@@ -1,4 +1,4 @@
-# Assignment Log API
+# Assignment Log Book App
 
 ## Data Model
 
@@ -20,8 +20,8 @@
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `/api/assignments` | `GET` | List all assignments | Success | None | Status: 200, `{ success: true, data: Assignment[] }` | Returns current in-memory array as-is | Passed |
 | **Evidence:** | | | | | ![](public/api_get_all.png) | | |
-| `/api/assignments` | `GET` | List all assignments | Error | Server failure | Status: 500, `{ success: false, message: "Failed to fetch assignments" }` | Wrapped in try-catch | Passed |
-| **Evidence:** | | | | | ![](public/api_get_error.png) | | |
+| `/api/assignment` | `GET` | Wrong endpoint URL | Error | URL not found | Status: 404 | Next.js handles invalid routes | Passed |
+| **Evidence:** | | | | | ![](public/api_get_all_error.png) | | |
 | `/api/assignments` | `POST` | Create new assignment | Success | `title`, `subject`, `description`, `dueDate` provided | Status: 201, `{ success: true, data: Assignment }` with generated `id` and `createdAt` | Generates UUID for `id`, ISO timestamp for `createdAt`, defaults `status` to `"pending"` | Passed |
 | **Evidence:** | | | | | ![](public/api_post.png) | | |
 | `/api/assignments` | `POST` | Create new assignment | Error | Missing required field (e.g., `title`) | Status: 400, `{ success: false, message: "title, subject, description, and dueDate are required" }` | Validates all four required fields | Passed |

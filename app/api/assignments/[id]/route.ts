@@ -1,3 +1,68 @@
+/**
+ * @swagger
+ * /api/assignments/{id}:
+ *   get:
+ *     tags: [Assignments]
+ *     summary: Get assignment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Assignment found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Assignment'
+ *       404:
+ *         description: Assignment not found
+ *       500:
+ *         description: Internal server error
+ *
+ *   put:
+ *     tags: [Assignments]
+ *     summary: Update assignment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AssignmentInput'
+ *     responses:
+ *       200:
+ *         description: Assignment updated successfully
+ *       404:
+ *         description: Assignment not found
+ *       500:
+ *         description: Internal server error
+ *
+ *   delete:
+ *     tags: [Assignments]
+ *     summary: Delete assignment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Assignment deleted successfully
+ *       404:
+ *         description: Assignment not found
+ *       500:
+ *         description: Internal server error
+ */
+
 import { NextResponse } from "next/server";
 import { assignments } from "@/lib/data";
 

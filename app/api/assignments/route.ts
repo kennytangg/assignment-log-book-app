@@ -1,3 +1,44 @@
+/**
+ * @swagger
+ * /api/assignments:
+ *   get:
+ *     tags: [Assignments]
+ *     summary: Get all assignments
+ *     responses:
+ *       200:
+ *         description: List of all assignments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Assignment'
+ *       500:
+ *         description: Internal server error
+ *
+ *   post:
+ *     tags: [Assignments]
+ *     summary: Create a new assignment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AssignmentInput'
+ *     responses:
+ *       201:
+ *         description: Assignment created successfully
+ *       400:
+ *         description: Missing required fields
+ *       500:
+ *         description: Internal server error
+ */
+
 import { NextResponse } from "next/server";
 import { assignments } from "@/lib/data";
 

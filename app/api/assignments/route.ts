@@ -43,7 +43,7 @@ import { NextResponse } from "next/server";
 import { assignments } from "@/lib/data";
 
 // GET /api/assignments — get all assignments
-export async function GET() {
+export async function GET(req: Request) {
   try {
     return NextResponse.json(
       { success: true, data: assignments },

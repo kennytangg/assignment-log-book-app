@@ -1,8 +1,9 @@
 export interface Assignment {
-    id: string;
-    title: string;
-    description: string;
-    dueDate: string;
-    status: "pending" | "completed" | "overdue";
-    createdAt: string;
+  id: string;
+  title: string;
+  subject: string;
+  description: string;
+  dueDate: string;
+  status: "pending" | "completed" | "overdue";
+  createdAt: string;
 }

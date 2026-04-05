@@ -38,18 +38,17 @@
  *       500:
  *         description: Internal server error
  */
-
 import { NextResponse } from "next/server";
-import { assignments } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 
 // GET /api/assignments — get all assignments
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    return NextResponse.json(
-      { success: true, data: assignments },
-      { status: 200 }
-    );
-  } catch (error) {
+    const assignments = await prisma.assignment.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({ success: true, data: assignments }, { status: 200 });
+  } catch {
     return NextResponse.json(
       { success: false, message: "Failed to fetch assignments" },
       { status: 500 }
@@ -63,7 +62,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, description, dueDate, status } = body;
 
-    // basic validation
     if (!title || !description || !dueDate) {
       return NextResponse.json(
         { success: false, message: "title, description, and dueDate are required" },
@@ -71,22 +69,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const newAssignment = {
-      id: crypto.randomUUID(),
-      title,
-      description,
-      dueDate,
-      status: status ?? "Create",
-      createdAt: new Date().toISOString(),
-    };
+    const assignment = await prisma.assignment.create({
+      data: {
+        title,
+        description,
+        dueDate,
+        status: status ?? "Create",
+      },
+    });
 
-    assignments.push(newAssignment);
-
-    return NextResponse.json(
-      { success: true, data: newAssignment },
-      { status: 201 }
-    );
-  } catch (error) {
+    return NextResponse.json({ success: true, data: assignment }, { status: 201 });
+  } catch {
     return NextResponse.json(
       { success: false, message: "Failed to create assignment" },
       { status: 500 }

@@ -11,8 +11,12 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
     "next": "16.1.6",
     "next-swagger-doc": "^0.4.1",
+    "pg": "^8.20.0",
+    "prisma": "^7.6.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "swagger-ui-react": "^5.32.0"
@@ -21,9 +25,11 @@
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/swagger-ui-react": "^5.18.0",
+    "dotenv": "^17.4.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "jest": "^30.2.0",

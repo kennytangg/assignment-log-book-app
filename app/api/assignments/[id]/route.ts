@@ -63,76 +63,91 @@
  *         description: Internal server error
  */
 import { NextResponse } from "next/server";
-import { assignments } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/generated/prisma/client";
+
+type Params = { params: Promise<{ id: string }> };
 
 // GET /api/assignments/:id — get single assignment
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
-    try {
-        const { id } = await params;
-        const assignment = assignments.find((a) => a.id === id);
-        if (!assignment) {
-            return NextResponse.json(
-                { success: false, message: "Assignment not found" },
-                { status: 404 }
-            );
-        }
-        return NextResponse.json(
-            { success: true, data: assignment },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { success: false, message: "Failed to fetch assignment" },
-            { status: 500 }
-        );
+export async function GET(req: Request, { params }: Params) {
+  try {
+    const { id } = await params;
+    const assignment = await prisma.assignment.findUnique({ where: { id } });
+
+    if (!assignment) {
+      return NextResponse.json(
+        { success: false, message: "Assignment not found" },
+        { status: 404 }
+      );
     }
+
+    return NextResponse.json({ success: true, data: assignment }, { status: 200 });
+  } catch {
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch assignment" },
+      { status: 500 }
+    );
+  }
 }
 
 // PUT /api/assignments/:id — update assignment
-export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-    try {
-        const { id } = await params;
-        const index = assignments.findIndex((a) => a.id === id);
-        if (index === -1) {
-            return NextResponse.json(
-                { success: false, message: "Assignment not found" },
-                { status: 404 }
-            );
-        }
-        const body = await req.json();
-        assignments[index] = { ...assignments[index], ...body };
-        return NextResponse.json(
-            { success: true, data: assignments[index] },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { success: false, message: "Failed to update assignment" },
-            { status: 500 }
-        );
+export async function PUT(req: Request, { params }: Params) {
+  try {
+    const { id } = await params;
+    const body = await req.json();
+    const { title, description, dueDate, status } = body;
+
+    const assignment = await prisma.assignment.update({
+      where: { id },
+      data: {
+        ...(title && { title }),
+        ...(description && { description }),
+        ...(dueDate && { dueDate }),
+        ...(status && { status }),
+      },
+    });
+
+    return NextResponse.json({ success: true, data: assignment }, { status: 200 });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return NextResponse.json(
+        { success: false, message: "Assignment not found" },
+        { status: 404 }
+      );
     }
+    return NextResponse.json(
+      { success: false, message: "Failed to update assignment" },
+      { status: 500 }
+    );
+  }
 }
 
 // DELETE /api/assignments/:id — delete assignment
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-    try {
-        const { id } = await params;
-        const index = assignments.findIndex((a) => a.id === id);
-        if (index === -1) {
-            return NextResponse.json(
-                { success: false, message: "Assignment not found" },
-                { status: 404 }
-            );
-        }
-        const deleted = assignments.splice(index, 1)[0];
-        return NextResponse.json(
-            { success: true, message: "Assignment deleted", data: deleted },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { success: false, message: "Failed to update assignment" },
-            { status: 500 }
-        );
+export async function DELETE(req: Request, { params }: Params) {
+  try {
+    const { id } = await params;
+    const assignment = await prisma.assignment.delete({ where: { id } });
+
+    return NextResponse.json(
+      { success: true, message: "Assignment deleted", data: assignment },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return NextResponse.json(
+        { success: false, message: "Assignment not found" },
+        { status: 404 }
+      );
     }
+    return NextResponse.json(
+      { success: false, message: "Failed to delete assignment" },
+      { status: 500 }
+    );
+  }
 }
